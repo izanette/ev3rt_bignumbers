@@ -14,6 +14,8 @@
 #define _debug(x)
 #endif
 
+BigNumber bignumber;
+
 void print(int line, const char* msg)
 {
     // Draw information
@@ -32,16 +34,40 @@ void clearScreen()
     ev3_lcd_fill_rect(0, 0, EV3_LCD_WIDTH, EV3_LCD_HEIGHT, EV3_LCD_WHITE);
 }
 
+static int counter = 91;
+
+void update_counter(intptr_t exinf)
+{
+    clearScreen();
+    if (counter >= 0)
+        bignumber.draw(--counter);
+}
+
 void main_task(intptr_t unused) {
-    BigNumber bignumber;
     while(true)
     {
-        for(int n = 99; n >= 0; n--)
+        clearScreen();
+        print(1, "starting cycle");
+        print(2, "in 1 second");
+        tslp_tsk(1000);
+
+        ev3_sta_cyc(EV3_UPDATE_COUNTER);
+        tslp_tsk(10000);
+        ev3_stp_cyc(EV3_UPDATE_COUNTER);
+
+        clearScreen();
+        print(1, "stopping cycle");
+        print(2, "after 10 seconds");
+        tslp_tsk(1000);
+        
+        // runs until it reaches 0
+        ev3_sta_cyc(EV3_UPDATE_COUNTER);
+        while(counter > 0)
         {
-            clearScreen();
-            bignumber.draw(n);
-            
-            tslp_tsk(250);
+            tslp_tsk(10);
         }
+        ev3_stp_cyc(EV3_UPDATE_COUNTER);
+        
+        counter = 91;
     }
 }
