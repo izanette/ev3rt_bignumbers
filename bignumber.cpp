@@ -1,9 +1,16 @@
 // bignumber.cpp
 #include "bignumber.h"
 
+bool BigNumber::initialized = false;
+image_t BigNumber::number_imgs[10];
+
 BigNumber::BigNumber()
 {
-    load_images();
+    if (!initialized)
+    {
+        load_images();
+        initialized = true;
+    }
 }
 
 void BigNumber::draw(int n)

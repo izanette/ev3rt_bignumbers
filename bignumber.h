@@ -11,10 +11,11 @@ public:
     void draw(int number);
 
 private:
-    image_t number_imgs[10];
-    int get_number_width(int i);
-    int get_total_number_width(int i);
+    static bool initialized;
+    static image_t number_imgs[10];
 
 private:
-    void load_images();
+    static void load_images();
+    int get_number_width(int i);
+    int get_total_number_width(int i);
 };
